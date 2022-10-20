@@ -1,1 +1,33 @@
-fast
+
+//states: "rotating", "follow", "checking", "right turn", "left turn", "straight"
+let state = "rotating";
+
+function main()
+{
+    switch(state)
+    {
+        case "rotating":
+
+        break;
+
+        case "follow":
+
+        break;
+
+        case "checking":
+
+        break;
+
+        case "right turn":
+
+        break;
+
+        case "left turn":
+
+        break;
+
+        case "straight":
+
+        break;
+    }
+}
