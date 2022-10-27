@@ -1,4 +1,4 @@
-player.onChat("run", function () {
+function followLeft () {
     while (!(motocart.isSidewalkRight())) {
         motocart.rotate(90)
     }
@@ -20,4 +20,28 @@ player.onChat("run", function () {
             motocart.rotate(-90)
         }
     }
+}
+
+function followRight () {
+    while (!(motocart.isSidewalkRight())) {
+        motocart.rotate(90)
+    }
+    while (true) {
+        motocart.move(1)
+        if (!(motocart.isSidewalkRight())) {
+            motocart.rotate(90)
+        } else if (motocart.isSidewalkAhead()) {
+            motocart.rotate(-90)
+        }
+        if (motocart.isAtStop()) {
+            motocart.pauseAtStopSign()
+        }
+    }
+}
+
+player.onChat("bat", function () {
+    player.say(motocart.batteryLevel())
+})
+player.onChat("run", function () {
+    followRight()
 })
