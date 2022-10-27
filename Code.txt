@@ -1,14 +1,24 @@
+//Follow Right
 player.onChat("run", function () {
-    while (true) {
-        if (motocart.isSidewalkRight()) {
-            motocart.move(1)
-        }
-        if (motocart.isSidewalkAhead()) {
+    while(!motocart.isSidewalkRight())
+    {
+        motocart.rotate(90)
+    }
+    
+    while(true)
+    {
+        motocart.move(1)
+        if(!motocart.isSidewalkRight())
+        {
             motocart.rotate(90)
         }
-        if (motocart.isAtStop()) {
+        else if(motocart.isSidewalkAhead())
+        {
+            motocart.rotate(-90)
+        }
+        if(motocart.isAtStop())
+        {
             motocart.pauseAtStopSign()
-            motocart.move(1)
         }
     }
 })
