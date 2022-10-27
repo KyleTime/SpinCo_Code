@@ -20,3 +20,28 @@ function orientSelf () {
 player.onChat("run", function () {
     followRight()
 })
+
+------------------------------------------------------------------
+player.onChat("run", function () {
+    while (!(motocart.isSidewalkRight())) {
+        motocart.rotate(90)
+    }
+    while (true) {
+        motocart.move(1)
+        if (!(motocart.isSidewalkRight())) {
+            motocart.rotate(90)
+        }
+        if (motocart.isAtStop()) {
+            motocart.pauseAtStopSign()
+            if (motocart.canLeftTurn()) {
+                for (let index = 0; index <= 6; index++) {
+                    motocart.move(1)
+                }
+                motocart.rotate(-90)
+            }
+        }
+        if (motocart.isSidewalkAhead() && !(motocart.isSidewalkRight())) {
+            motocart.rotate(-90)
+        }
+    }
+})
