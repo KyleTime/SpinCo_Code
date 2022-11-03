@@ -1,4 +1,4 @@
-function followLeft () {
+function followLeft() {
     while (!(motocart.isSidewalkRight())) {
         motocart.rotate(90)
     }
@@ -22,21 +22,49 @@ function followLeft () {
     }
 }
 
-function followRight () {
+function followRight() {
     while (!(motocart.isSidewalkRight())) {
         motocart.rotate(90)
     }
     while (true) {
-        motocart.move(1)
-        if (!(motocart.isSidewalkRight())) {
-            motocart.rotate(90)
-        } else if (motocart.isSidewalkAhead()) {
-            motocart.rotate(-90)
-        }
         if (motocart.isAtStop()) {
             motocart.pauseAtStopSign()
+            if(motocart.canRightTurn())
+            {
+                turnRight()
+            }
+            else if(motocart.canGoStraight())
+            {
+                goStraight()
+            }
+            else
+            {
+                turnLeft()
+            }
+        }
+        else{
+            motocart.move(1)
         }
     }
+}
+
+function turnRight()
+{
+    motocart.move(1)
+    motocart.rotate(90)
+    motocart.move(1)
+}
+
+function goStraight()
+{
+    for (let x = 0; x < 8; x++) {
+        motocart.move(1)
+    }
+}
+
+function turnLeft()
+{
+
 }
 
 player.onChat("bat", function () {
