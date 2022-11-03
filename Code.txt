@@ -1,66 +1,66 @@
-
-function followRight() {
-    while (!(motocart.isSidewalkRight())) {
-        motocart.rotate(90)
-    }
-    while (true) {
-        if (motocart.isAtStop()) {
-            motocart.pauseAtStopSign()
-            if(motocart.canRightTurn())
-            {
-                turnRight()
-            }
-            else if(motocart.canGoStraight())
-            {
-                goStraight()
-            }
-            else
-            {
-                turnLeft()
-            }
-        }
-        else{
-            if(!motocart.isSidewalkRight())
-            {
-                motocart.rotate(90)
-            }
-            else if(motocart.isSidewalkAhead())
-            {
-                motocart.rotate(-90)
-            }
-            motocart.move(1)
-        }
-    }
-}
-
-function turnRight()
-{
-    motocart.move(1)
-    motocart.rotate(90)
-    motocart.move(1)
-}
-
-function goStraight()
-{
-    for (let x = 0; x < 8; x++) {
-        motocart.move(1)
-    }
-}
-
-function turnLeft()
-{
-    for (let x = 0; x < 7; x++) {
+function turnLeft () {
+    for (let index = 0; index < 7; index++) {
         motocart.move(1)
     }
     motocart.rotate(-90)
-    for (let x = 0; x < 7; x++) {
+    for (let index = 0; index < 7; index++) {
         motocart.move(1)
     }
 }
-
+function goStraight () {
+    for (let index = 0; index < 8; index++) {
+        motocart.move(1)
+    }
+}
+function followRight () {
+    while (true) {
+        if (state == "orienting") {
+            motocart.rotate(90)
+            if (motocart.isSidewalkRight()) {
+                state = "follow"
+            }
+        } else if (state == "follow") {
+            if (!(motocart.isSidewalkRight())) {
+                motocart.rotate(90)
+            } else if (motocart.isSidewalkAhead()) {
+                motocart.rotate(-90)
+            }
+            motocart.move(1)
+            if (motocart.isAtStop()) {
+                state = "checking"
+                motocart.pauseAtStopSign()
+            }
+        } else if (state == "checking") {
+            if (motocart.canRightTurn()) {
+                state = "right turn"
+            } else if (motocart.canGoStraight()) {
+                state = "straight"
+            } else if (motocart.canLeftTurn()) {
+                state = "left turn"
+            }
+        } else if (state == "straight") {
+            goStraight()
+            state = "follow"
+        } else if (state == "left turn") {
+            turnLeft()
+            state = "follow"
+        } else if (state == "right turn") {
+            turnRight()
+            state = "follow"
+        }
+    }
+}
 player.onChat("bat", function () {
     player.say(motocart.batteryLevel())
 })
 player.onChat("run", function () {
     followRight()
 })
+function turnRight () {
+    motocart.move(1)
+    motocart.rotate(90)
+    motocart.move(1)
+}
+let state = ""
+// states ["orienting", "follow", "checking", "left turn", "right turn", "straight"]
+state = "orienting"
