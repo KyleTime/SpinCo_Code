@@ -45,7 +45,7 @@ function followRight()
 }
 
 function main () {
-    while (true) {
+    while (motocart.batteryLevel() > 0) {
         if (state == "orienting") {
             motocart.rotate(90)
             if (motocart.isSidewalkRight()) {
@@ -115,6 +115,7 @@ function main () {
             state = "follow"
         }
     }
+    player.say("finished with: " + motocart.batteryLevel() + " battery")
 }
 player.onChat("bat", function () {
     player.say(motocart.batteryLevel())
