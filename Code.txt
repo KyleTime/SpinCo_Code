@@ -16,7 +16,6 @@ function goStraight () {
 function followGPS()
 {
     let gps = motocart.getGpsDirection()
-
     if(gps == 1)
     {
         turnLeft()
@@ -39,10 +38,10 @@ function followRight()
         motocart.rotate(-90)
     }
     motocart.move(1)
-    if (motocart.isAtStop()) {
+    /*if (motocart.isAtStop()) {
         state = "checking"
         motocart.pauseAtStopSign()
-    }
+    }*/
 }
 
 function main () {
@@ -56,12 +55,12 @@ function main () {
 
             if(motocart.isPassengerInCart())
             {
-                state = "FollowDP";
+                state = "followDP";
             }
             else
             {
                 motocart.findNewPassenger()
-                state = "FollowPK";
+                state = "followPK";
             }
         }
         else if(state == "followPK")
@@ -70,7 +69,6 @@ function main () {
             {
                 motocart.pickUpPassenger()
                 state = "follow"
-                player.say(":)")
             }
             else if(motocart.isAtStop())
             {
