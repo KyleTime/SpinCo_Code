@@ -30,7 +30,16 @@ function followRight () {
                 state = "checking"
                 motocart.pauseAtStopSign()
             }
-        } else if (state == "checking") {
+        }
+        else if(state == "followPK")
+        {
+
+        }
+        else if(state == "followDP")
+        {
+            
+        }
+         else if (state == "checking") {
             if (motocart.canRightTurn()) {
                 state = "right turn"
             } else if (motocart.canGoStraight()) {
@@ -62,5 +71,5 @@ function turnRight () {
     motocart.move(1)
 }
 let state = ""
-// states ["orienting", "follow", "checking", "left turn", "right turn", "straight"]
+// states ["orienting", "follow", "followPK", "followDP", "checking", "left turn", "right turn", "straight"]
 state = "orienting"
