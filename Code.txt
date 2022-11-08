@@ -1,5 +1,5 @@
 function turnLeft () {
-    for (let index = 0; index < 7; index++) {
+    for (let index = 0; index < 6; index++) {
         motocart.move(1)
     }
     motocart.rotate(-90)
