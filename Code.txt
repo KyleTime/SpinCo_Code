@@ -12,7 +12,40 @@ function goStraight () {
         motocart.move(1)
     }
 }
-function followRight () {
+
+function followGPS()
+{
+    let gps = motocart.getGpsDirection()
+
+    if(gps == 1)
+    {
+        turnLeft()
+    }
+    else if(gps == 2)
+    {
+        turnRight()
+    }
+    else if(gps == 3)
+    {
+        goStraight()
+    }
+}
+
+function followRight()
+{
+    if (!(motocart.isSidewalkRight())) {
+        motocart.rotate(90)
+    } else if (motocart.isSidewalkAhead()) {
+        motocart.rotate(-90)
+    }
+    motocart.move(1)
+    if (motocart.isAtStop()) {
+        state = "checking"
+        motocart.pauseAtStopSign()
+    }
+}
+
+function main () {
     while (true) {
         if (state == "orienting") {
             motocart.rotate(90)
@@ -20,24 +53,50 @@ function followRight () {
                 state = "follow"
             }
         } else if (state == "follow") {
-            if (!(motocart.isSidewalkRight())) {
-                motocart.rotate(90)
-            } else if (motocart.isSidewalkAhead()) {
-                motocart.rotate(-90)
+
+            if(motocart.isPassengerInCart())
+            {
+                state = "FollowDP";
             }
-            motocart.move(1)
-            if (motocart.isAtStop()) {
-                state = "checking"
-                motocart.pauseAtStopSign()
+            else
+            {
+                motocart.findNewPassenger()
+                state = "FollowPK";
             }
         }
         else if(state == "followPK")
         {
-
+            if(motocart.isCartAtDestination())
+            {
+                motocart.pickUpPassenger()
+                state = "follow"
+                player.say(":)")
+            }
+            else if(motocart.isAtStop())
+            {
+                motocart.pauseAtStopSign()
+                followGPS()
+            }
+            else
+            {
+                followRight();
+            }
         }
         else if(state == "followDP")
         {
-            
+            if (motocart.isCartAtDestination()) {
+                motocart.dropOffPassenger()
+                state = "follow"
+            }
+            else if(motocart.isAtStop())
+            {
+                motocart.pauseAtStopSign()
+                followGPS()
+            }
+            else
+            {
+                followRight();
+            }
         }
          else if (state == "checking") {
             if (motocart.canRightTurn()) {
@@ -63,7 +122,7 @@ player.onChat("bat", function () {
     player.say(motocart.batteryLevel())
 })
 player.onChat("run", function () {
-    followRight()
+    main()
 })
 function turnRight () {
     motocart.move(1)
