@@ -1,37 +1,42 @@
-function turnLeft () {
+function turnRight() {
+    motocart.move(1)
+    motocart.rotate(90)
+
+    for(let index = 0; index < minRight + 1; index++)
+    {
+        motocart.move(1)
+    }
+}
+function turnLeft() {
     for (let index = 0; index < 6; index++) {
         motocart.move(1)
     }
     motocart.rotate(-90)
-    for (let index = 0; index < 7; index++) {
+    for (let index = 0; index < 6 + minLeft; index++) {
         motocart.move(1)
     }
 }
-function goStraight () {
-    for (let index = 0; index < 8; index++) {
+function goStraight() {
+    //was 8 when worked last
+    for (let index = 0; index < 7 + minStraight; index++) {
         motocart.move(1)
     }
 }
 
-function followGPS()
-{
+function followGPS() {
     let gps = motocart.getGpsDirection()
-    if(gps == 1)
-    {
+    if (gps == 1) {
         turnLeft()
     }
-    else if(gps == 2)
-    {
+    else if (gps == 2) {
         turnRight()
     }
-    else if(gps == 3)
-    {
+    else if (gps == 3) {
         goStraight()
     }
 }
 
-function followRight()
-{
+function followRight() {
     if (!(motocart.isSidewalkRight())) {
         motocart.rotate(90)
     } else if (motocart.isSidewalkAhead()) {
@@ -44,8 +49,9 @@ function followRight()
     }*/
 }
 
-function main () {
-    while (motocart.batteryLevel() > 0) {
+function main() {
+    startTime = gameplay.timeQuery(GAME_TIME)
+    while (true) {
         if (state == "orienting") {
             motocart.rotate(90)
             if (motocart.isSidewalkRight()) {
@@ -53,50 +59,41 @@ function main () {
             }
         } else if (state == "follow") {
 
-            if(motocart.isPassengerInCart())
-            {
+            if (motocart.isPassengerInCart()) {
                 state = "followDP";
             }
-            else
-            {
+            else {
                 motocart.findNewPassenger()
                 state = "followPK";
             }
         }
-        else if(state == "followPK")
-        {
-            if(motocart.isCartAtDestination())
-            {
+        else if (state == "followPK") {
+            if (motocart.isCartAtDestination()) {
                 motocart.pickUpPassenger()
                 state = "follow"
             }
-            else if(motocart.isAtStop())
-            {
+            else if (motocart.isAtStop()) {
                 motocart.pauseAtStopSign()
                 followGPS()
             }
-            else
-            {
+            else {
                 followRight();
             }
         }
-        else if(state == "followDP")
-        {
+        else if (state == "followDP") {
             if (motocart.isCartAtDestination()) {
                 motocart.dropOffPassenger()
                 state = "follow"
             }
-            else if(motocart.isAtStop())
-            {
+            else if (motocart.isAtStop()) {
                 motocart.pauseAtStopSign()
                 followGPS()
             }
-            else
-            {
+            else {
                 followRight();
             }
         }
-         else if (state == "checking") {
+        else if (state == "checking") {
             if (motocart.canRightTurn()) {
                 state = "right turn"
             } else if (motocart.canGoStraight()) {
@@ -115,19 +112,24 @@ function main () {
             state = "follow"
         }
     }
-    player.say("finished with: " + motocart.batteryLevel() + " battery")
 }
 player.onChat("bat", function () {
     player.say(motocart.batteryLevel())
 })
+
+player.onChat("time", function () {
+    player.say(((gameplay.timeQuery(GAME_TIME) - startTime) / 20.0) + " seconds")
+})
+
 player.onChat("run", function () {
     main()
 })
-function turnRight () {
-    motocart.move(1)
-    motocart.rotate(90)
-    motocart.move(1)
-}
+
 let state = ""
 // states ["orienting", "follow", "followPK", "followDP", "checking", "left turn", "right turn", "straight"]
 state = "orienting"
+let minLeft = 3
+let minStraight = 3
+let minRight = 3
+
+let startTime = 0
