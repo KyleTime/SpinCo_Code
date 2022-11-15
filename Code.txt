@@ -41,12 +41,9 @@ function followRight() {
         motocart.rotate(90)
     } else if (motocart.isSidewalkAhead()) {
         motocart.rotate(-90)
+        motocart.move(1)
     }
     motocart.move(1)
-    /*if (motocart.isAtStop()) {
-        state = "checking"
-        motocart.pauseAtStopSign()
-    }*/
 }
 
 function main() {
@@ -111,6 +108,11 @@ function main() {
             turnRight()
             state = "follow"
         }
+
+        if(motocart.batteryLevel() <= 0)
+        {
+            player.say("Out of Battery, ran for " + ((gameplay.timeQuery(GAME_TIME) - startTime) / 20.0) + " seconds")
+        }
     }
 }
 player.onChat("bat", function () {
@@ -119,6 +121,10 @@ player.onChat("bat", function () {
 
 player.onChat("time", function () {
     player.say(((gameplay.timeQuery(GAME_TIME) - startTime) / 20.0) + " seconds")
+})
+
+player.onChat("dat", function () {
+    player.say("Battery at: " + motocart.batteryLevel() + " Time at: " + ((gameplay.timeQuery(GAME_TIME) - startTime) / 20.0) + " seconds")
 })
 
 player.onChat("run", function () {
